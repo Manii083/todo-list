@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoList2</title>
+</head>
+<body>
+    <style>
+        body{
+            font-family: arial;
+        }
+    .grid-box ,.js-todo{
+        display: grid;
+        grid-template-columns: 180px 150px 100px;
+        column-gap: 10px;
+        margin-bottom: 20px;
+        row-gap: 20px;
+        align-items: center;
+    }
+    .js-date-input,.js-input,.add-button {
+        font-size: 15px;
+        padding: 6px;
+        
+    }
+  
+    .add-button{
+        color: white;
+        background-color:green;
+        border: none;
+        padding: 8px; 
+    } 
+    .js-delete {
+        background-color:rgb(184, 15, 15);
+        border: none;
+        padding:10px 20px;
+        color: white;
+    }
+    </style>
+    <p>TodoList</p>
+    <div class="grid-box">
+        <input type="text" placeholder="Todo Name" class="js-input" onkeypress="
+        if(event.key==='Enter'){
+            addFunction();
+        }
+        ">
+        <input type="date" class="js-date-input" >
+        <button class="add-button js-add-button" 
+        >Add</button>
+        </div>
+    
+    <div class="js-todo"></div>
+    <script>
+       const myArray =JSON.parse(localStorage.getItem('myArray')) || [{ name:'make dinner', dueDate:'2003-11-13'},{name:'wash dishes',dueDate:'2004-07-15' } ];
+
+        renderTodoList();
+
+
+        function renderTodoList(){
+        let todoListHTML = '';
+
+        myArray.forEach((todoObject,index) => {
+          
+           const {name,dueDate} = todoObject;
+            const html = `<div>
+                ${name}</div> <div>${dueDate} </div>
+                <button class="js-delete js-delete-button" >Delete</button></div>
+                `;
+            todoListHTML += html;
+        })
+      
+
+        document.querySelector('.js-todo').innerHTML=todoListHTML;
+
+       document.querySelectorAll('.js-delete-button').forEach((deleteButton,index) => {
+           deleteButton.addEventListener('click', () => {
+            myArray.splice(index,1);
+            renderTodoList();
+           }) 
+       })
+
+    }
+
+    document.querySelector('.js-add-button').addEventListener('click', () => {
+        addFunction();
+    });
+
+        function addFunction(){
+          inputElement =  document.querySelector('.js-input');
+
+         let name = inputElement.value;
+         const dateInputElement = document.querySelector('.js-date-input');
+         const dueDate = dateInputElement.value;
+
+          myArray.push({
+           // name:name,dueDate:dueDate
+            name,dueDate
+          });
+          console.log(myArray);
+          inputElement.value='';
+
+          renderTodoList();
+          saveStorage();
+        }
+        function saveStorage(){
+    localStorage.setItem('myArray',JSON.stringify(myArray));
+}
+    </script>
+</body>
+</html>
